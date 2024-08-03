@@ -1,7 +1,11 @@
+import asyncio
 import logging
+from contextlib import suppress
 
 from aiogram import Bot, Dispatcher
+from aiogram.enums.update_type import UpdateType
 
+from todolist.clients import AsyncScheduledNotification
 from todolist.middlewares import register_middlewares
 from todolist.database import get_engine, get_sessionmaker
 from todolist.database.entities import BaseEntity
@@ -12,15 +16,14 @@ from todolist.settings import get_settings
 
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('aiosqlite').disabled = True
 
 settings = get_settings()
 bot = Bot(settings.BOT_TOKEN)
 dispatcher = Dispatcher()
 
-
 engine = get_engine()
 sessionmaker = get_sessionmaker(engine)
-
 
 @dispatcher.startup()
 async def create_all_tables():
@@ -29,9 +32,14 @@ async def create_all_tables():
 
 
 repo_store = RepositoriesStore(sessionmaker)
-services_store = ServicesStore(repo_store, settings, bot)
+services_store = ServicesStore(repo_store, settings, bot, schedule_client=AsyncScheduledNotification(bot))
 
 register_middlewares(dispatcher, services_store)
 setup_handlers(dispatcher)
 
-dispatcher.run_polling(bot, services_store=services_store, settings=settings)  # type: ignore
+if __name__ == "__main__":
+    with suppress(KeyboardInterrupt):
+        asyncio.run(
+            dispatcher.start_polling(bot, allowed_updates=[UpdateType.MESSAGE, UpdateType.CALLBACK_QUERY], services_store=services_store, settings=settings),  # type: ignore
+            debug=settings.DEBUG,
+        )
