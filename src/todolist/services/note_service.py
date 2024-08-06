@@ -3,16 +3,15 @@ import typing as t
 from aiogram import Bot
 
 from todolist.database.entities import NoteEntity
-from todolist.database.repositories import RepositoriesStore
 from todolist.database.repositories.types import NoteCreateValues
 from todolist.clients import ScheduledNotificationAbc
 from todolist.settings import Settings
 
-from .base_service import BaseService
+from .base_service import BaseService, IRepositoriesStore
 
 
 class NoteService(BaseService):
-    def __init__(self, repo_store: RepositoriesStore, settings: Settings, bot: Bot, schedule_client: ScheduledNotificationAbc) -> None:
+    def __init__(self, repo_store: IRepositoriesStore, settings: Settings, bot: Bot, schedule_client: ScheduledNotificationAbc) -> None:
         super().__init__(repo_store, settings, bot)
         self._schedule_client = schedule_client
     

@@ -1,32 +1,28 @@
-from contextlib import asynccontextmanager
+import typing as t
 
-from todolist.database.entities import BaseEntity
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from .base_repository import BaseRepository
-from .user_repository import UserRepository
-from .note_repository import NoteRepository
-
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from .user_repository import UserRepository, AbcUserRepository
+from .note_repository import NoteRepository, AbcNoteRepository
 
 
 class RepositoriesStore:
     def __init__(self, sessionmaker: async_sessionmaker[AsyncSession]) -> None:
         self._sessionmaker = sessionmaker
-        self.user_repo = UserRepository(sessionmaker)
-        self.note_repo = NoteRepository(sessionmaker)
+        self._user_repo: t.Final = UserRepository(sessionmaker)
+        self._note_repo: t.Final = NoteRepository(sessionmaker)
 
-    async def add_to_session_and_commit(self, entity: BaseEntity):
-        async with self._sessionmaker() as session:
-            session.add(entity)
-            await session.commit()
+    @property
+    def user_repo(self) -> UserRepository: return self._user_repo
 
-    @asynccontextmanager
-    async def transaction(self):
-        async with self._sessionmaker().begin() as transaction:
-            yield transaction
+    @property
+    def note_repo(self) -> NoteRepository: return self._note_repo
 
 
 __all__ = (
     "BaseRepository",
     "UserRepository",
+    "AbcUserRepository",
+    "AbcNoteRepository",
 )

@@ -19,6 +19,7 @@ class UserEntityKw(BaseEntityKw):
 class UserEntity(BaseEntity):
     __tablename__ = "users"
 
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     telegram_id: orm.Mapped[int] = orm.mapped_column(BigInteger)
     email: orm.Mapped[str]
     name: orm.Mapped[str]

@@ -21,6 +21,7 @@ class NoteEntityKw(BaseEntityKw):
 class NoteEntity(BaseEntity):
     __tablename__ = 'notes'
 
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     text: orm.Mapped[str] = orm.mapped_column(sa.TEXT)
     remainder_time: orm.Mapped[dt.datetime]
 

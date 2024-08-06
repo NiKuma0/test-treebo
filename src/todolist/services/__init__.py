@@ -1,10 +1,9 @@
 from aiogram import Bot
 
 from todolist.clients.scheduled_notification_client import ScheduledNotificationAbc
-from todolist.database.repositories import RepositoriesStore
 from todolist.settings import Settings
 
-from .base_service import BaseService
+from .base_service import BaseService, IRepositoriesStore
 from .user_service import UserService
 from .note_service import NoteService
 
@@ -12,7 +11,7 @@ from .note_service import NoteService
 class ServicesStore:
     def __init__(
         self,
-        repo_store: RepositoriesStore,
+        repo_store: IRepositoriesStore,
         settings: Settings,
         bot: Bot,
         schedule_client: ScheduledNotificationAbc

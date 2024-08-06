@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import (
 )
 
 
-def get_engine() -> AsyncEngine:
-    return create_async_engine("sqlite+aiosqlite:///database.sqllite")
+def get_engine(db_dsn: str = "sqlite+aiosqlite:///database.sqllite") -> AsyncEngine:
+    return create_async_engine(db_dsn)
 
 
 def get_sessionmaker(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:

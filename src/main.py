@@ -16,7 +16,6 @@ from todolist.settings import get_settings
 
 
 logging.basicConfig(level=logging.DEBUG)
-logging.getLogger('aiosqlite').disabled = True
 
 settings = get_settings()
 bot = Bot(settings.BOT_TOKEN)
@@ -40,6 +39,11 @@ setup_handlers(dispatcher)
 if __name__ == "__main__":
     with suppress(KeyboardInterrupt):
         asyncio.run(
-            dispatcher.start_polling(bot, allowed_updates=[UpdateType.MESSAGE, UpdateType.CALLBACK_QUERY], services_store=services_store, settings=settings),  # type: ignore
+            dispatcher.start_polling(  # type: ignore
+                bot,
+                allowed_updates=[UpdateType.MESSAGE, UpdateType.CALLBACK_QUERY],
+                services_store=services_store,
+                settings=settings,
+            ),
             debug=settings.DEBUG,
         )

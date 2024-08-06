@@ -1,8 +1,18 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+import typing as t
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+
+import abc
+
+type SessionMakerType[T] = t.Callable[..., t.AsyncContextManager[T]]
 
 
-class BaseRepository:
-    _sessionmaker: async_sessionmaker[AsyncSession]
+class AbcRepository[T: SessionMakerType[t.Any]](abc.ABC):
+    _sessionmaker: T
 
-    def __init__(self, sessionmaker: async_sessionmaker[AsyncSession]):
+    def __init__(self, sessionmaker: T):
         self._sessionmaker = sessionmaker
+
+
+class BaseRepository(AbcRepository[async_sessionmaker[AsyncSession]]):
+    _sessionmaker: async_sessionmaker[AsyncSession]

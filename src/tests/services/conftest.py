@@ -3,15 +3,18 @@ from unittest import mock
 
 from aiogram import Bot
 
-from todolist.database.repositories import RepositoriesStore
 from todolist.settings import Settings
 from todolist.database.repositories import UserRepository, NoteRepository
 
 
-class RepoStoreMock(RepositoriesStore):
+class RepoStoreMock:
     def __init__(self) -> None:
-        self.user_repo = mock.MagicMock(UserRepository)
-        self.note_repo = mock.MagicMock(NoteRepository)
+        self._user_repo = mock.MagicMock(UserRepository)
+        self._note_repo = mock.MagicMock(NoteRepository)
+    @property
+    def user_repo(self): return self._user_repo
+    @property
+    def note_repo(self): return self._note_repo
 
 
 @pytest.fixture(name="repo_store_mock")
