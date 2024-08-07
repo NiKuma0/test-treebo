@@ -14,7 +14,7 @@ class ServicesStore:
         repo_store: IRepositoriesStore,
         settings: Settings,
         bot: Bot,
-        schedule_client: ScheduledNotificationAbc
+        schedule_client: ScheduledNotificationAbc,
     ) -> None:
         self.user_service = UserService(repo_store, settings, bot)
         self.note_service = NoteService(repo_store, settings, bot, schedule_client)

@@ -13,7 +13,9 @@ class UserMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: dict[str, t.Any],
     ) -> t.Any:
-        services: ServicesStore = data['services_store']
-        user = await services.user_service.get_or_none(t.cast(User, data['event_from_user']).id)
-        data['user'] = user
+        services: ServicesStore = data["services_store"]
+        user = await services.user_service.get_or_none(
+            t.cast(User, data["event_from_user"]).id
+        )
+        data["user"] = user
         return await handler(event, data)

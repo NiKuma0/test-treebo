@@ -44,7 +44,7 @@ export class ApiConstruct extends Construct {
         environment: {
           DEBUG: 'false',
           BOT_TOKEN: secrets.secretValueFromJson('BOT_TOKEN').unsafeUnwrap(),
-          DB_DSN: `aiopg+postgres://${rdsInstance.dbInstanceEndpointAddress}:${rdsInstance.dbInstanceEndpointPort}`,
+          DB_DSN: `postgresql+aiopg://${rdsInstance.dbInstanceEndpointAddress}:${rdsInstance.dbInstanceEndpointPort}`,
         },
       }
     )

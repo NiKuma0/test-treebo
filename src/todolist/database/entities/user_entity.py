@@ -14,7 +14,8 @@ class UserEntityKw(BaseEntityKw):
     email: str
     name: str
 
-    notes: t.NotRequired[list['NoteEntity'] | None]
+    notes: t.NotRequired[list["NoteEntity"] | None]
+
 
 class UserEntity(BaseEntity):
     __tablename__ = "users"
@@ -24,7 +25,8 @@ class UserEntity(BaseEntity):
     email: orm.Mapped[str]
     name: orm.Mapped[str]
 
-    notes: orm.Mapped[list['NoteEntity'] | None] = orm.relationship()
+    notes: orm.Mapped[list["NoteEntity"] | None] = orm.relationship()
 
     if t.TYPE_CHECKING:
+
         def __init__(self, **kwargs: t.Unpack[UserEntityKw]): ...

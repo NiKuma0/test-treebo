@@ -21,8 +21,9 @@ settings = get_settings()
 bot = Bot(settings.BOT_TOKEN)
 dispatcher = Dispatcher()
 
-engine = get_engine()
+engine = get_engine(settings.DB_DSN)
 sessionmaker = get_sessionmaker(engine)
+
 
 @dispatcher.startup()
 async def create_all_tables():
@@ -31,7 +32,9 @@ async def create_all_tables():
 
 
 repo_store = RepositoriesStore(sessionmaker)
-services_store = ServicesStore(repo_store, settings, bot, schedule_client=AsyncScheduledNotification(bot))
+services_store = ServicesStore(
+    repo_store, settings, bot, schedule_client=AsyncScheduledNotification(bot)
+)
 
 register_middlewares(dispatcher, services_store)
 setup_handlers(dispatcher)

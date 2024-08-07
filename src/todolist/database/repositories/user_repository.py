@@ -13,7 +13,9 @@ class AbcUserRepository(abc.ABC):
     @abc.abstractmethod
     async def get_by_telegram_id(self, telegram_id: int) -> UserEntity | None: ...
     @abc.abstractmethod
-    async def get_or_create(self, **values: t.Unpack[UserCreateValues]) -> UserEntity: ...
+    async def get_or_create(
+        self, **values: t.Unpack[UserCreateValues]
+    ) -> UserEntity: ...
 
 
 class UserRepository(AbcUserRepository, BaseRepository):
@@ -25,8 +27,9 @@ class UserRepository(AbcUserRepository, BaseRepository):
 
     @t.override
     async def get_or_create(self, **values: t.Unpack[UserCreateValues]) -> UserEntity:
-        user = await self.get_by_telegram_id(values['telegram_id'])
-        if user is not None: return user
+        user = await self.get_by_telegram_id(values["telegram_id"])
+        if user is not None:
+            return user
         q = sa.insert(UserEntity).values(**values).returning(UserEntity)
         async with self._sessionmaker() as session:
             res = await session.execute(q)

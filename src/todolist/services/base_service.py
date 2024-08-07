@@ -4,6 +4,7 @@ from aiogram import Bot
 from todolist.settings import Settings
 from todolist.database.repositories import AbcNoteRepository, AbcUserRepository
 
+
 class IRepositoriesStore(t.Protocol):
     @property
     def user_repo(self) -> AbcUserRepository: ...

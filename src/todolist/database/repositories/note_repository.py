@@ -16,6 +16,7 @@ class AbcNoteRepository(abc.ABC):
     @abc.abstractmethod
     async def get_my_notes(self, user_id: int) -> t.Sequence[NoteEntity]: ...
 
+
 class NoteRepository(BaseRepository, AbcNoteRepository):
     @t.override
     async def create(self, **values: t.Unpack[NoteCreateValues]) -> NoteEntity:

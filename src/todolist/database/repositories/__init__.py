@@ -14,10 +14,12 @@ class RepositoriesStore:
         self._note_repo: t.Final = NoteRepository(sessionmaker)
 
     @property
-    def user_repo(self) -> UserRepository: return self._user_repo
+    def user_repo(self) -> UserRepository:
+        return self._user_repo
 
     @property
-    def note_repo(self) -> NoteRepository: return self._note_repo
+    def note_repo(self) -> NoteRepository:
+        return self._note_repo
 
 
 __all__ = (

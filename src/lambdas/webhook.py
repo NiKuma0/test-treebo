@@ -32,26 +32,31 @@ engine = get_engine()
 sessionmaker = get_sessionmaker(engine)
 
 repo_store = RepositoriesStore(sessionmaker)
-services_store = ServicesStore(repo_store, settings, bot, schedule_client=AsyncScheduledNotification(bot))
+services_store = ServicesStore(
+    repo_store, settings, bot, schedule_client=AsyncScheduledNotification(bot)
+)
 
 register_middlewares(dispatcher, services_store)
 setup_handlers(dispatcher)
 
-def handler(event: 'events.APIGatewayProxyEventV2', context: 'context.Context') -> 'responses.APIGatewayProxyResponseV2':
+
+def handler(
+    event: "events.APIGatewayProxyEventV2", context: "context.Context"
+) -> "responses.APIGatewayProxyResponseV2":
     logger.info("Starting validation")
     try:
-        update = Update.model_validate_json(event.get('body', ''), strict=False)
+        update = Update.model_validate_json(event.get("body", ""), strict=False)
     except ValidationError as e:
-        return {
-            'statusCode': HTTPStatus.BAD_REQUEST,
-            'body': e.json()
-        }
+        return {"statusCode": HTTPStatus.BAD_REQUEST, "body": e.json()}
 
     logger.info("Feeding update to dispatcher.")
     loop.run_until_complete(
         dispatcher.feed_update(
-            bot, update=update, services_store=services_store, settings=settings,
+            bot,
+            update=update,
+            services_store=services_store,
+            settings=settings,
         )
     )
     logger.info("Returning status code.")
-    return { 'statusCode': HTTPStatus.OK }
+    return {"statusCode": HTTPStatus.OK}

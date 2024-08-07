@@ -15,19 +15,25 @@ class MessageData(t.TypedDict):
     chat_id: int | str
     text: str
 
+
 class ScheduledNotificationAbc(abc.ABC):
     @abc.abstractmethod
-    async def send_message(self, delay: DelayType, **message: t.Unpack[MessageData]) -> None: ...
+    async def send_message(
+        self, delay: DelayType, **message: t.Unpack[MessageData]
+    ) -> None: ...
     async def shutdown(self): ...
 
 
 class AsyncScheduledNotification(ScheduledNotificationAbc):
     """Scheduling by asyncio tasks."""
+
     def __init__(self, bot: Bot):
         self._tasks: set[asyncio.Task[None]] = set()
         self._bot = bot
 
-    async def _send_message_after_delay(self, seconds: int | float, **message: t.Unpack[MessageData]):
+    async def _send_message_after_delay(
+        self, seconds: int | float, **message: t.Unpack[MessageData]
+    ):
         try:
             await asyncio.sleep(seconds)
         except asyncio.CancelledError:
@@ -46,12 +52,11 @@ class AsyncScheduledNotification(ScheduledNotificationAbc):
                 seconds = delay
         if seconds < 0:
             raise BackToTheFuture("Notifications into the past are not possible.")
-        task = asyncio.create_task(
-            self._send_message_after_delay(seconds, **message)
-        )
+        task = asyncio.create_task(self._send_message_after_delay(seconds, **message))
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
 
     @t.override
     async def shutdown(self):
-        for task in self._tasks: task.cancel()
+        for task in self._tasks:
+            task.cancel()
