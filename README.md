@@ -5,52 +5,26 @@ Describe your project here.
 
 # Installing guides
 
-## Установка через собранный архив Docker Image:
-
-1. Открываем терминал и переходим в папку с архивом.
-
-2. Загружаем Docker Image:
+## Local Mode:
+1. Install dependencies. Suggest to use virtual environment:
     ```
-    docker load -i todolist.image.tar
-    ```
-
-    > ![info]
-    > [Как установить Docker.](https://docs.docker.com/engine/install/).
-
-
-## Сборка проекта (если нет архива):
-
-1. Build the docker image:
-    ```
-    docker buildx build . --tag todolist
+    python3.12 -m venv venv
+    . ./venv/bin/activate
+    pip install -U pip
+    pip install -r requirements.lock
     ```
 
-    > ![info]
-    > [Как установить докер.](https://docs.docker.com/engine/install/).
+2. Rename or copy [`.env.example`](.env.example) to `.env`, and add the bot token.
+3. Run Postgres docker container, you can use `docker-compose.postgres.yaml` file:
+    ```
+    sudo docker compose -f docker-compose.postgres.yaml up -d
+    ```
+4. Run application:
+    ```
+    python src/main.py
+    ```
 
-
-# Запуск приложения:
-
-```bash
-sudo docker run -e BOT_TOKEN=BOT_TOKEN \
-    todolist
-```
-
-Также можно воспользоваться Docker Desktop:
-
-1. Переходим в images:
-
-![alt text](readme-statics/image.png)
-
-Also you can create `.env` file and use it:
-
-```bash
-sudo docker run --env-file <path_to_your_env_file> todolist
-```
-
-
-
-# Dev Mode:
+## Dev Mode:
 
 1. Install deps by using `rye`:
     ```bash
@@ -63,23 +37,15 @@ sudo docker run --env-file <path_to_your_env_file> todolist
 2. Create `.env` file as in [example](.env.example):
 3. Run it:
     ```
-    source .env
     python src/main.py
     ```
-**After editing build project:**
+
+
+## AWS Mode (in developing):
 
 ```
-make build
-make build-image
+cdk build
 ```
-This will create `dist/` directory with two (or one) archives.
-One with source code (`todolist.sourcecode.zip`) second with
-docker image (`todolist.image.tar`, [how to use this archive](#installing-from-image-archive)).
-
-> ![info]
-> If you doesn't have Docker image archive will not creates.
-> 
-> [How To install docker](https://docs.docker.com/engine/install/).
 
 
 **VScode debugger configuration file:**
