@@ -30,9 +30,8 @@ Describe your project here.
     ```bash
     rye sync
     ```
-
-    > [!NOTE]  
-    > [How To install rye](https://rye.astral.sh/guide/installation/).
+> [!NOTE]  
+> [How To install rye](https://rye.astral.sh/guide/installation/).
 
 2. Create `.env` file as in [example](.env.example):
 3. Run it:
