@@ -31,7 +31,7 @@ Describe your project here.
     rye sync
     ```
 
-    > ![info]
+    > [!NOTE]  
     > [How To install rye](https://rye.astral.sh/guide/installation/).
 
 2. Create `.env` file as in [example](.env.example):
